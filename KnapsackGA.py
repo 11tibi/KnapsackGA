@@ -1,6 +1,8 @@
 from pathlib import Path
 from Solver import Solver
+from KnapsackGreedy import KnapsackGreedy
 import re
+import matplotlib.pyplot as plt
 
 
 class KnapsackGA:
@@ -28,12 +30,20 @@ class KnapsackGA:
                 self.instances.append(data)
 
     def solve_instances(self):
+        results_ga = []
+        results_greedy = []
         for instance in self.instances:
-            Solver(instance).solve()
-            # TODO delete return
-            return
+            results_ga.append(Solver(instance).solve())
+            results_greedy.append(KnapsackGreedy(instance).knapsack_greedy())
+        return results_ga, results_greedy, self.instances
 
 
 if __name__ == '__main__':
-    knapsack = KnapsackGA()
-    knapsack.solve_instances()
+    knapsack_ga = KnapsackGA()
+    res = knapsack_ga.solve_instances()
+    for i in res:
+        print(i)
+    plt.plot(range(len(res[0])), res[0], label="GA")
+    plt.plot(range(len(res[0])), res[1], label="knapsack")
+    plt.legend()
+    plt.show()
